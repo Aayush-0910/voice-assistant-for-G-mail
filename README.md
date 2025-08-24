@@ -2,34 +2,42 @@
 
 
 
+A Python-based voice assistant that integrates with the Gmail API to streamline email management, with features like fetching emails, sending automated responses, and voicemail notifications.
 
-A Python-based voice assistant that integrates with the Gmail API to manage emails, with features like fetching messages, sending automated responses, and voicemail notifications.
+Table of Contents
 
-✨ Features
+Features
+Prerequisites
+Setup Instructions
+Usage
+Troubleshooting
+Contributing
+License
 
-Secure Authentication: Uses Google OAuth2 for safe and secure Gmail access.
-Inbox Management: Retrieve and filter emails from your Gmail inbox.
-Automated Emails: Send automated responses or voicemail-related notifications.
-Developer-Friendly Testing: Supports restricted access for development and testing.
+Features
 
+Secure Authentication: Integrates Google OAuth2 for safe Gmail access.
+Inbox Management: Fetch and filter emails from your Gmail inbox.
+Automated Emails: Send automated responses or voicemail notifications.
+Developer Testing: Restricted access mode for development and testing.
 
-🛠️ Setup Instructions
 Prerequisites
 
 Python 3.8 or higher
 A Google account
-A Google Cloud project with Gmail API enabled
+Access to Google Cloud Console for API setup
+pip for installing dependencies
 
-Step-by-Step Setup
+Setup Instructions
 
 Clone the Repository
 git clone https://github.com/yourusername/voicemail.git
 cd voicemail
 
 
-Set Up a Google Cloud Project
+Set Up Google Cloud Project
 
-Navigate to the Google Cloud Console.
+Visit the Google Cloud Console.
 Create a new project or select an existing one.
 Enable the Gmail API:
 Go to APIs & Services > Library.
@@ -40,55 +48,57 @@ Search for "Gmail API" and click Enable.
 
 Configure OAuth Consent Screen
 
-In the Google Cloud Console, go to APIs & Services > OAuth consent screen.
-Select External for testing purposes.
-Add your email address as a Test User under the "Test users" section.
-Save your changes.
+Navigate to APIs & Services > OAuth consent screen.
+Select External for testing.
+Add your email as a Test User in the "Test users" section.
+Save changes.
 
 
 Create OAuth Credentials
 
-Navigate to APIs & Services > Credentials.
+Go to APIs & Services > Credentials.
 Click Create Credentials > OAuth Client ID.
-Select Desktop app (or Web application if hosting online).
-Download the JSON file, rename it to credentials.json, and place it in the project root directory.
+Select Desktop app (or Web application if hosting).
+Download the JSON file, rename it to credentials.json, and place it in the project root.
 
 
 Install Dependencies
-
-Ensure Python 3.8+ is installed.
-Install required packages:pip install -r requirements.txt
-
-
+pip install -r requirements.txt
 
 
 Run the Application
+python main.py
 
-Execute the main script:python main.py
 
-
-On first run:
-A browser window will prompt you to log in to your Google account.
-Grant the necessary permissions.
-A token.json file will be created for subsequent logins.
+On first run, a browser window will prompt Google login.
+Grant permissions to generate a token.json for future logins.
 
 
 
+Usage
+
+Fetch Emails: Use the app to retrieve and filter inbox messages.
+Send Automated Emails: Configure automated responses for voicemail notifications.
+Testing Mode: Only approved test users can log in until Google verification is complete.
+
+Troubleshooting
+
+Error: "Access blocked: This app hasn't completed the Google verification process"
+Ensure your email is added as a Test User in the OAuth consent screen.
+Wait a few minutes for changes to propagate.
 
 
+Dependency Issues: Verify Python 3.8+ and run pip install -r requirements.txt again.
+Token Issues: Delete token.json and rerun python main.py to re-authenticate.
 
-⚠️ Important Notes
+Contributing
+Contributions are welcome! Please:
 
-Testing Mode: The app operates in testing mode, limiting access to developer-approved test users until Google verification is complete.
-Common Issue: If you encounter "Access blocked: This app hasn't completed the Google verification process":
-Verify your email is listed as a Test User in the OAuth consent screen.
-Allow a few minutes for changes to propagate after adding test users.
+Fork the repository.
+Create a feature branch (git checkout -b feature/awesome-feature).
+Commit changes (git commit -m 'Add awesome feature').
+Push to the branch (git push origin feature/awesome-feature).
+Open a pull request.
 
-
-
-
-📜 License
-This project is licensed under the MIT License – feel free to use, modify, and distribute.
-
-💡 Contributing
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+License
+This project is licensed under the MIT License.
