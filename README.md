@@ -1,4 +1,8 @@
 📧 Voice Assistant for Gmail
+
+
+
+
 A Python-based voice assistant that integrates with the Gmail API to manage emails, with features like fetching messages, sending automated responses, and voicemail notifications.
 
 ✨ Features
