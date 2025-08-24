@@ -108,8 +108,8 @@ def check_mails(service):
         # if email found
         speak("{} new emails found".format(len(messages)))
 
-        speak("if you want to read any particular email just type yes ")
-        speak("and for not reading type no ")
+        speak("if you want to read any particular email just type read it ")
+        speak("and for not reading type do not read it ")
         for message in messages:
 
             msg = service.users().messages().get(userId='me',
