@@ -1,90 +1,62 @@
-📩 Voicemail – Gmail API Integration
-
-This project connects to Gmail API to fetch/send emails and handle voicemail-related features.
-
+voice-assistant-for-G-mail
+This project integrates with the Gmail API to fetch and send emails, with a focus on voicemail-related features like automated email handling and notifications.
 🚀 Features
 
-Secure Google OAuth2 authentication
-
-Fetch messages from Gmail inbox
-
-Send automated emails/voicemails
-
-Developer mode testing with restricted access
+Secure Authentication: Google OAuth2 integration for safe access to Gmail.
+Inbox Management: Fetch messages from your Gmail inbox with filtering options.
+Automated Emails: Send automated responses or voicemail notifications.
+Developer Testing: Restricted access mode for development and testing.
 
 🛠️ Setup Instructions
 1. Clone the Repository
-git clone https://github.com/yourusername/voicemail.git
+bashgit clone https://github.com/yourusername/voicemail.git
 cd voicemail
-
 2. Create a Google Cloud Project
 
-Go to Google Cloud Console
-.
-
+Go to the Google Cloud Console.
 Create a new project or select an existing one.
+Enable the Gmail API:
 
-Enable the Gmail API for the project:
-
-Visit Enable Gmail API
-.
-
+Visit Enable Gmail API.
 Select your project and click Enable.
+
+
 
 3. Configure OAuth Consent Screen
 
-In Google Cloud Console, go to APIs & Services > OAuth consent screen.
-
+In Google Cloud Console, navigate to APIs & Services > OAuth consent screen.
 Select External (for testing with your account).
-
 Add your email as a Test User.
-
 Save changes.
 
 4. Create OAuth Credentials
 
-Navigate to APIs & Services > Credentials.
-
+Go to APIs & Services > Credentials.
 Click Create Credentials > OAuth Client ID.
-
-Choose Desktop app (or Web if you’re hosting it).
-
-Download the JSON file and rename it to:
-
-credentials.json
-
-
+Choose Desktop app (or Web application if hosting).
+Download the JSON file and rename it to credentials.json.
 Place this file in the project root directory.
 
 5. Install Dependencies
-
-Make sure you have Python 3.8+ installed.
-
-pip install -r requirements.txt
-
+Ensure you have Python 3.8+ installed:
+bashpip install -r requirements.txt
 6. Run the App
-python main.py
-
-
+bashpython main.py
 On the first run:
 
-A browser window will open asking you to log in with your Google account.
+A browser window will open for Google login.
+Grant the required permissions.
+A token.json file will be generated for future logins.
 
-Grant permissions.
+📌 Important Notes
 
-A token.json file will be generated automatically for future logins.
+Testing Mode: The app is in testing mode, so only developer-approved users can log in until Google verification is completed.
+Common Error: If you see "Access blocked: This app hasn't completed the Google verification process":
 
-📌 Notes
-
-This app is in testing mode, so only developer-approved users can log in until verification is completed.
-
-If you get an error like:
-
-Access blocked: This app hasn’t completed the Google verification process
+Ensure your email is added as a Test User in the OAuth consent screen.
+Wait a few minutes after adding test users for changes to propagate.
 
 
-→ Make sure your email is added as a Test User in the OAuth consent screen.
 
 📜 License
-
-MIT License – feel free to use and modify.
+MIT License – feel free to use, modify, and distribu
