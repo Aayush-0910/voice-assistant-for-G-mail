@@ -2,70 +2,60 @@ from __future__ import print_function
 import datetime
 import pickle
 import os.path
+import sys
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-import os
-import pyttsx3
-import speech_recognition as sr
 from datetime import date
 
-# If modifying these scopes, delete the file token.pickle .
-# if you run this for the first
-# t time it will take you to gmail to choose your account
+# If modifying these scopes, delete the file token.pickle
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+
+# Check if running in CI mode
+CI_MODE = "--ci" in sys.argv
+
+if not CI_MODE:
+    import pyttsx3
+    import speech_recognition as sr
 
 
 def speak(text):
-    engine = pyttsx3.init()
-    voices = engine.getProperty('voices')
-    engine.setProperty('voice', voices[1].id)
-    rate = engine.getProperty('rate')
-
-    engine.setProperty('rate', rate-20)
-
-    engine.say(text)
-    engine.runAndWait()
-
-
-speak("Welcome to voice assistant for G-mail")
+    if CI_MODE:
+        print("[Speak disabled in CI] ->", text)
+    else:
+        engine = pyttsx3.init()
+        voices = engine.getProperty('voices')
+        engine.setProperty('voice', voices[1].id)
+        rate = engine.getProperty('rate')
+        engine.setProperty('rate', rate - 20)
+        engine.say(text)
+        engine.runAndWait()
 
 
 def get_audio():
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        r.pause_threshold = 1
-        r.adjust_for_ambient_noise(source, duration=1)
-        audio = r.listen(source)
-        said = ""
-
+    if CI_MODE:
+        print("[Audio input disabled in CI]")
+        return ""
     try:
-        said = r.recognize_google(audio)
-        print(said)
-
-    except:
+        r = sr.Recognizer()
+        with sr.Microphone() as source:
+            r.pause_threshold = 1
+            r.adjust_for_ambient_noise(source, duration=1)
+            audio = r.listen(source)
+            said = r.recognize_google(audio)
+            print(said)
+            return said.lower()
+    except Exception as e:
         speak("Didn't get that")
-
-    return said.lower()
+        return ""
 
 
 def authenticate_gmail():
-    """Shows basic usage of the Gmail API.
-    Lists the user's Gmail labels.
-    """
     creds = None
-
-    # The file token.pickle stores the user's
-    # access and refresh tokens, and is
-    # created automatically when the authorization
-    # flow completes for the first
-    # time.
     if os.path.exists('token.pickle'):
         with open('token.pickle', 'rb') as token:
             creds = pickle.load(token)
 
-    # If there are no (valid) credentials available,
-    # let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
@@ -74,7 +64,6 @@ def authenticate_gmail():
                 'credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
 
-        # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
@@ -83,58 +72,47 @@ def authenticate_gmail():
 
 
 def check_mails(service):
-
-    # fetching emails of today's date
-    today = (date.today())
-
+    today = date.today()
     today_main = today.strftime('%Y/%m/%d')
 
-    # Call the Gmail API
-    results = service.users().messages().list(userId='me',
-                                              labelIds=["INBOX", "UNREAD"],
-                                              q="after:{0} and category:Primary".format(today_main)).execute()
-    # The above code will get emails from primary
-    # inbox which are unread
+    results = service.users().messages().list(
+        userId='me',
+        labelIds=["INBOX", "UNREAD"],
+        q=f"after:{today_main} and category:Primary"
+    ).execute()
+
     messages = results.get('messages', [])
 
     if not messages:
-
-        # if no new emails
         print('No messages found.')
         speak('No messages found.')
     else:
-        m = ""
-
-        # if email found
-        speak("{} new emails found".format(len(messages)))
-
-        speak("if you want to read any particular email just type read it ")
-        speak("and for not reading type do not read it ")
+        speak(f"{len(messages)} new emails found")
         for message in messages:
-
-            msg = service.users().messages().get(userId='me',
-                                                 id=message['id'], format='metadata').execute()
+            msg = service.users().messages().get(
+                userId='me',
+                id=message['id'],
+                format='metadata'
+            ).execute()
 
             for add in msg['payload']['headers']:
                 if add['name'] == "From":
+                    sender = str(add['value'].split("<")[0])
+                    print("Email from:", sender)
+                    speak("email from " + sender)
 
-                    # fetching sender's email name
-                    a = str(add['value'].split("<")[0])
-                    print(a)
-
-                    speak("email from"+a)
-                    text = input()
-
-                    if text == "read":
-
-                        print(msg['snippet'])
-
-                        # speak up the mail
-                        speak(msg['snippet'])
-
+                    if CI_MODE:
+                        print("Snippet:", msg['snippet'])
                     else:
-                        speak("email skipped")
+                        text = input("Type 'read' to hear it, anything else to skip: ")
+                        if text.strip().lower() == "read":
+                            print(msg['snippet'])
+                            speak(msg['snippet'])
+                        else:
+                            speak("email skipped")
 
 
-SERVICE2 = authenticate_gmail()
-check_mails(SERVICE2)
+if __name__ == "__main__":
+    speak("Welcome to Gmail Assistant")
+    service = authenticate_gmail()
+    check_mails(service)
