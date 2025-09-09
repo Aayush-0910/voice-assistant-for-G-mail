@@ -1,0 +1,28 @@
+name: Gmail Assistant CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-gmail-assistant:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib
+
+      - name: Create credentials.json
+        run: echo "${{ secrets.GMAIL_CREDENTIALS }}" > credentials.json
+
+      - name: Run Gmail Assistant (CI mode)
+        run: python gmail_assistant.py --ci
